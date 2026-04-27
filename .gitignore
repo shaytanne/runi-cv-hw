@@ -1,0 +1,16 @@
+# Virtual environment
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# uv cache (the lock file itself IS committed)
+.uv/
+
+# OS
+.DS_Store
+Thumbs.db

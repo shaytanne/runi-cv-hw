@@ -1,0 +1,16 @@
+[project]
+name = "hw2"
+version = "0.1.0"
+description = "Computer Vision — Exercise 2"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.3.2",
+    "opencv-python",
+    "matplotlib",
+    "scipy",
+    "jupyter",
+    "ipykernel",
+]
+
+[tool.uv]
+# uv-specific settings (lock file is committed for reproducibility)
