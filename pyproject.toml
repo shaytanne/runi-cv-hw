@@ -8,6 +8,7 @@ dependencies = [
     "opencv-python",
     "matplotlib",
     "scipy",
+    "pillow",
     "jupyter",
     "ipykernel",
 ]

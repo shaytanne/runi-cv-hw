@@ -13,7 +13,4 @@ dependencies = [
     "scipy>=1.17.1",
 ]
 
-[dependency-groups]
-dev = [
-    "nbstripout>=0.9.1",
-]
+
