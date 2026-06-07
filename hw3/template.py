@@ -33,15 +33,6 @@
 # 5. Your code must run without errors. **Code that fails to run will not be graded.**
 # 6. Document your code properly.
 
-# %% [markdown]
-# ## Honor Code
-# The assignment is a basic tool for learning the material. You can probably find the solution on the web, but then you will not learn anything from it.
-# You are more than welcome to discuss the assignment with your friends, but you are not allowed to give your code or answers and you are not allowed to use their code or answers.
-# Feel free to use AI, but you are expected to understand every piece of code that you submit. Please re-read the course's AI policy.
-# Remember — you take this course in order to learn. Also, the final exam will contain a lot of material from the assignments. 😀
-# 
-# ### I declair that I respcet the honor code, and that I understand the course's plagiarism policy and AI policy.
-# <span style="color:red"> Shay Tanne
 
 # %%
 import cv2
@@ -109,21 +100,21 @@ fR = 1.0
 # 
 
 # %%
-OxR = MR[0, 2]
-OyR = MR[1, 2]
+OxR = None
+OyR = None
 
 # %% [markdown]
 # Compute the right image scale factor which is consistent with MR:
 
 # %%
-SxR = MR[0, 0] / fR
-SyR = MR[1, 1] / fR
+SxR = None
+SyR = None
 
 # %% [markdown]
 # Compute the right image intrinsic matrix which is consistent with MR:
 
 # %%
-MintR = MR[:, :3]
+MintR = None
 
 # %% [markdown]
 #  
@@ -162,29 +153,17 @@ RL = np.array([[ 0.9891,    0.0602,   -0.1346],
                [-0.0590,    0.9982,    0.0134],
                [0.1351,   -0.0053,    0.9908]])
 
-# %%
-vL = RL @ np.array([[0, 0, 1]]).T
-vL
-
-# %%
-vR = RR @ np.array([[0, 0, 1]]).T
-vR
-
 # %% [markdown]
 # Compute the intrinsic projection matrix of the left camera: 
 
 # %%
-MintL = np.array([
-    [SxL * fL, 0,        OxL],
-    [0,        SyL * fL, OyL],
-    [0,        0,        1  ]
-]) 
+MintL = None 
 
 # %% [markdown]
 # Compute the projection matrix of the left camera
 
 # %%
-ML = MintL @ np.hstack((RL, TL))
+ML = None
 
 # %% [markdown]
 # Compute the COP of the left and the right images, in Cartesian coordinates:   
@@ -192,19 +171,15 @@ ML = MintL @ np.hstack((RL, TL))
 # (You may use the the function *null_space* from *scipy.linalg*) 
 
 # %%
-nullspaceL = null_space(ML)
-nullspaceR = null_space(MR)
-
-CL = nullspaceL[:3] / nullspaceL[3]
-CR = nullspaceR[:3] / nullspaceR[3]
-print(f"CL={CL.flatten()} | CR={CR.flatten()}")
+CL = None
+CR = None
 
 # %% [markdown]
 # Compute the distance between CL and CR:
 #     
 
 # %%
-D = float(np.linalg.norm(CL - CR)) 
+D = None 
 
 # %% [markdown]
 # ## <span style="color:blue">Part A2: Hands on Triangulation
@@ -213,19 +188,9 @@ D = float(np.linalg.norm(CL - CR))
 # 
 
 # %%
-def proj(M: np.ndarray, P: np.ndarray) -> np.ndarray:
-    if P.ndim == 1:
-        P = P.reshape(-1, 1)
-    
-    # convert to homogeneous coords [x, y, z, 1]^T
-    P_homog = np.vstack((P, np.ones((1, P.shape[1]))))
-    
-    # project points
-    p_homog = M @ P_homog
-    
-    # convert back to 2d Euclidean coords
-    p_eucl = p_homog[:2] / p_homog[2]
-    return p_eucl
+def proj(M,P):
+    # your code here
+    ...
 
 # %% [markdown]
 # **<span style="color:blue">Answer Quesion:**\
@@ -241,27 +206,19 @@ def proj(M: np.ndarray, P: np.ndarray) -> np.ndarray:
 # **<span style="color:blue">Your answer:**
 
 # %%
-P = np.array([[-140],[50],[1200]])
-Q = np.array([[30],[100],[2000]])
-
-# 3D coords in LEFT camera coord system: P_camera = R * P_world + translation_vector
-PL = RL @ P + TL
-QL = RL @ Q + TL
-
-# 3D coords in RIGHT camera coord system (RR is I and TR is 0-vector)
-PR = P
-QR = Q
-
-print(f"a) 3D coords in left camera coord system: \n P = {PL.flatten()} \n Q = {QL.flatten()}\n")
-print(f"b) 3D coords in right camera coord system: \n P = {PR.flatten()} \n Q = {QR.flatten()}\n")
+PL = None
+PR = None
+QL = None
+QR = None
 
 # %%
-# 2D coords in image coord system (projections of 3D points in image plane)
+P = np.array([[-140],[50],[1200]])
 pL = proj(ML,P)
 pR = proj(MR,P)
+
+Q = np.array([[30],[100],[2000]]) 
 qL = proj(ML,Q)
 qR = proj(MR,Q)
-print(f" pL = {pL.flatten()} \n pR = {pR.flatten()} \n qL = {qL.flatten()} \n qR = {qR.flatten()}")
 
 # %% [markdown]
 # ### Read two images and display the projections of P and Q on the two given images ###
@@ -283,15 +240,11 @@ ax2.imshow(imR, cmap='gray'), ax2.set_title('Right image'), ax2.scatter(pR[0], p
 # Look at the projection of each of the points in the two images. One pair looks as expected, and the other does not. Please give a short explanation of what may have caused it.
 
 # %% [markdown]
-# **<span style="color:blue">Your answer:**
-# 
-# It seems that in the transition between right camera to left camera, $P$ (red dot) slides left more than $Q$ (blue dot). I believe this is due to parallax:
-# 
-# * the left camera's COP is to the left of that of the right camera
-# * the direction of the left camera's $z$ axis (where the camera points) is slightly in the positive $x$ direction, whereas the right camera's $z$ axis points straight down the world coordinates' $z$ direction
-# * in parallax, closer objects undergo greater pixel shift than farther ones
-# * $P$ is closer to both cameras than $Q$, and so if shifts left significantly more (~27% more)
-# * in the right image, $P$ and $Q$ seem to live in roughly the same $z$ axis region, and when projected on the left image, $Q$ shifts somewhat reasonably due to the change in COP and camera direction, but $P$ shifts more and over the image boundary, due to parallax effect on its translation
+# **<span style="color:blue">Your answer:**\
+#    ...
+#     
+#     
+#     
 
 # %% [markdown]
 # ## <span style="color:blue"> Part B: Epipolar Geometry

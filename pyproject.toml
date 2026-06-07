@@ -14,4 +14,9 @@ dependencies = [
 ]
 
 [tool.uv]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.2.0",
+]
 # uv-specific settings (lock file is committed for reproducibility)
